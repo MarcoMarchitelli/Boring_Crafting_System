@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1208759445476059388}
   - component: {fileID: 1208759445476059377}
-  - component: {fileID: 1208759445476059376}
+  - component: {fileID: 2236878870542598325}
   - component: {fileID: 1208759445476059378}
   - component: {fileID: 1208759445476059379}
   m_Layer: 5
@@ -48,7 +48,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1208759445476059389}
   m_CullTransparentMesh: 0
---- !u!114 &1208759445476059376
+--- !u!114 &2236878870542598325
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -57,15 +57,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1208759445476059389}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0b474bbe75e0b5428d467d47a01ba75, type: 3}
+  m_Script: {fileID: 11500000, guid: e81188e263fbcaa42b8855627ab09ad7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 0}
   image: {fileID: 0}
   nameText: {fileID: 1208759446443120517}
-  steelText: {fileID: 0}
-  woodText: {fileID: 0}
-  leatherText: {fileID: 0}
+  costsTransform: {fileID: 0}
+  itemCostUIPrefab: {fileID: 0}
 --- !u!114 &1208759445476059378
 MonoBehaviour:
   m_ObjectHideFlags: 0

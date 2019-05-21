@@ -9,7 +9,10 @@ public class InventoryUI : MonoBehaviour
 
     private void Awake()
     {
-        inventory.OnDataChanged += UpdateUI;
+        if (inventory)
+        {
+            inventory.OnDataChanged += UpdateUI;
+        }
     }
 
     public void UpdateUI()

@@ -5,16 +5,16 @@ public class Inventory : MonoBehaviour
     public int maxItems;
     public Item[] startingItems;
 
-    Item[] items;
+    Item[] _items;
     public Item[] Items
     {
         get
         {
-            return items;
+            return _items;
         }
         set
         {
-            items = value;
+            _items = value;
             OnDataChanged?.Invoke();
         }
     }
@@ -30,7 +30,7 @@ public class Inventory : MonoBehaviour
     {
         Items = new Item[maxItems];
 
-        for (int i = 0; i < items.Length; i++)
+        for (int i = 0; i < Items.Length; i++)
         {
             if (i <= startingItems.Length - 1)
                 Items[i] = startingItems[i];
@@ -39,4 +39,27 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    public void AddItem(Item _item)
+    {
+        for (int i = 0; i < Items.Length; i++)
+        {
+            if (Items[i] == null)
+            {
+                Items[i] = _item;
+                break;
+            }
+        }
+    }
+
+    public void RemoveItem(Item _item)
+    {
+        for (int i = 0; i < Items.Length; i++)
+        {
+            if (Items[i] == _item)
+            {
+                Items[i] = null;
+                break;
+            }
+        }
+    }
 }
