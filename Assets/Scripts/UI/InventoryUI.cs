@@ -3,6 +3,7 @@
 public class InventoryUI : MonoBehaviour
 {
     public Inventory inventory;
+    public RectTransform itemsParent;
 
     [Header("UI")]
     public ItemUI itemUI;
@@ -17,14 +18,20 @@ public class InventoryUI : MonoBehaviour
 
     public void UpdateUI()
     {
-        for (int i = 0; i < transform.childCount; i++)
+        if (!itemsParent)
         {
-            Destroy(transform.GetChild(i).gameObject);
+            Debug.LogError(name + " has no transform as items parent!");
+            return;
+        }
+
+        for (int i = 0; i < itemsParent.childCount; i++)
+        {
+            Destroy(itemsParent.GetChild(i).gameObject);
         }
 
         for (int i = 0; i < inventory.Items.Length; i++)
         {
-            ItemUI iUI = Instantiate(itemUI, transform);
+            ItemUI iUI = Instantiate(itemUI, itemsParent);
             iUI.SetItem(inventory.Items[i]);
         }
     }

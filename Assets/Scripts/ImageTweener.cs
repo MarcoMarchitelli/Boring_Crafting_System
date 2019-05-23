@@ -6,6 +6,7 @@ using TMPro;
 public class ImageTweener : MonoBehaviour
 {
     public bool tweenOnAwake;
+    public bool isCustomButton;
 
     [Header("Color")]
     public bool tweenColor;
@@ -24,11 +25,54 @@ public class ImageTweener : MonoBehaviour
     public Image image;
     public TextMeshProUGUI text;
 
+    bool active;
+
+    Tween imageColor, textColor, imageRotationShake, imageScaleUp, imageScaleDown, imageScaleHuge;
+
     private void Awake()
     {
+        DOTween.defaultAutoPlay = AutoPlay.None;
+        DOTween.defaultAutoKill = false;
+
+        InitTweens();
+
         if (tweenOnAwake)
-        {
             StartTweening();
+    }
+
+    void InitTweens()
+    {
+        if (image)
+        {
+            if (tweenColor)
+            {
+                imageColor = image.DOGradientColor(gradient, colorSpeed).SetLoops(-1);
+                imageColor.Rewind();
+            }
+
+            if (shakeRotation)
+            {
+                imageRotationShake = image.rectTransform.DOPunchRotation(shakeAngles, shakeSpeed, shakeVibration, shakeElasticity).SetLoops(-1);
+                imageRotationShake.Rewind();
+            }
+
+            if (isCustomButton)
+            {
+                imageScaleUp = image.rectTransform.DOScale(1.5f, .2f);
+                imageScaleDown = image.rectTransform.DOScale(1, .2f);
+                imageScaleHuge = image.rectTransform.DOScale(2f, .2f);
+                imageScaleUp.Rewind();
+                imageScaleDown.Rewind();
+                imageScaleHuge.Rewind();
+            }
+        }
+        if (text)
+        {
+            if (tweenColor)
+            {
+                textColor = text.fontMaterial.DOGradientColor(gradient, "_FaceColor", colorSpeed).SetLoops(-1);
+                textColor.Rewind();
+            }
         }
     }
 
@@ -38,32 +82,72 @@ public class ImageTweener : MonoBehaviour
         {
             if (image)
             {
-                image.DOGradientColor(gradient, colorSpeed).SetLoops(-1);
+                imageColor.PlayForward();
             }
             if (text)
             {
-                text.fontMaterial.DOGradientColor(gradient, "_FaceColor", colorSpeed).SetLoops(-1);
+                textColor.Play();
             }
         }
 
         if (shakeRotation)
         {
-            image.rectTransform.DOPunchRotation(shakeAngles, shakeSpeed, shakeVibration, shakeElasticity).SetLoops(-1);
+            imageRotationShake.Play();
         }
+    }
+
+    public void StopTweening()
+    {
+        imageColor.Rewind();
+        textColor.Rewind();
+        imageRotationShake.Rewind();
+        imageScaleUp.Rewind();
+        imageScaleDown.Rewind();
+        imageScaleHuge.Rewind();
     }
 
     public void HandlePointerEnter()
     {
-        image.rectTransform.DOScale(Vector3.one * 1.5f, .2f);
+        if (active)
+        {
+            imageScaleUp.Rewind();
+            imageScaleUp.Play();
+        }
     }
 
     public void HandlePointerExit()
     {
-        image.rectTransform.DOScale(Vector3.one, .2f);
+        if (active)
+        {
+            imageScaleDown.Rewind();
+            imageScaleDown.Play();
+        }
     }
 
     public void HandlePointerDown()
     {
-        image.rectTransform.DOPunchScale(Vector3.one * 2f, .2f, 5, 1);
+        if (active)
+        {
+            imageScaleHuge.Rewind();
+            imageScaleHuge.Play();
+        }
+    }
+
+    public void HandlePointerUp()
+    {
+        if (active)
+        {
+            imageScaleDown.Rewind();
+            imageScaleDown.Play();
+        }
+    }
+
+    public void SetActive(bool _value)
+    {
+        active = _value;
+        if (active)
+            StartTweening();
+        else
+            StopTweening();
     }
 }

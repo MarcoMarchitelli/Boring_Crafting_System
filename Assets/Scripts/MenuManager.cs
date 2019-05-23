@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
@@ -7,9 +8,11 @@ public class MenuManager : MonoBehaviour
     public PlayerUI playerUI;
 
     [Header("UI")]
-    public InventoryUI craftSelectionMenu;
-    public ItemUI craftDecisionMenu;
-    public ItemUI dismantleMenu;
+    public CustomButton craftButton;
+    public CustomButton dismantleButton;
+    public Menu craftSelectionMenu;
+    public Menu craftDecisionMenu;
+    public Menu dismantleMenu;
 
     Item selectedItem;
 
@@ -24,6 +27,11 @@ public class MenuManager : MonoBehaviour
             Instance = this;
 
         playerUI.UpdateUI();
+    }
+
+    private void Start()
+    {
+        GoToMenu(MenuType.main);
     }
 
     private void Update()
@@ -48,18 +56,18 @@ public class MenuManager : MonoBehaviour
     public void SelectItem(Item _item)
     {
         selectedItem = _item;
+        dismantleButton.SetActive(true);
     }
 
     public void OpenCraftSelectionMenu()
     {
-        craftSelectionMenu.gameObject.SetActive(true);
-        craftSelectionMenu.UpdateUI();
+        GoToMenu(MenuType.craftSelection);
     }
 
     public void OpenCraftDecisionMenu(Item _item)
     {
-        craftDecisionMenu.gameObject.SetActive(true);
-        craftDecisionMenu.SetItem(_item);
+        GoToMenu(MenuType.craftDecision);
+        craftDecisionMenu.GetComponent<ItemUI>().SetItem(_item);
     }
 
     public void OpenDismantleMenu()
@@ -67,7 +75,7 @@ public class MenuManager : MonoBehaviour
         if (selectedItem)
         {
             GoToMenu(MenuType.dismantle);
-            dismantleMenu.SetItem(selectedItem);
+            dismantleMenu.GetComponent<ItemUI>().SetItem(selectedItem);
         }
     }
 
@@ -119,22 +127,32 @@ public class MenuManager : MonoBehaviour
 
     public void GoToMenu(MenuType _menuToGoTo)
     {
-        switch (_menuToGoTo)
+        currentMenu = _menuToGoTo;
+        switch (currentMenu)
         {
             case MenuType.main:
+                craftButton.SetActive(true);
+                dismantleButton.SetActive(false);
                 craftDecisionMenu.gameObject.SetActive(false);
                 craftSelectionMenu.gameObject.SetActive(false);
                 dismantleMenu.gameObject.SetActive(false);
                 break;
             case MenuType.craftSelection:
+                craftButton.SetActive(false);
+                dismantleButton.SetActive(false);
                 craftDecisionMenu.gameObject.SetActive(false);
                 craftSelectionMenu.gameObject.SetActive(true);
                 break;
             case MenuType.craftDecision:
+                craftButton.SetActive(false);
+                dismantleButton.SetActive(false);
+                craftDecisionMenu.gameObject.SetActive(true);
                 break;
             case MenuType.dismantle:
+                craftButton.SetActive(false);
+                dismantleButton.SetActive(false);
                 dismantleMenu.gameObject.SetActive(true);
-                dismantleMenu.SetItem(selectedItem);
+                dismantleMenu.GetComponent<ItemUI>().SetItem(selectedItem);
                 break;
         }
     }

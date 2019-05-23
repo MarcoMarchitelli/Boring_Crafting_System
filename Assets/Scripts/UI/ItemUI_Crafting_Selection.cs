@@ -1,14 +1,12 @@
-﻿using UnityEngine.UI;
-
-public class ItemUI_Crafting_Selection : ItemUI
+﻿public class ItemUI_Crafting_Selection : ItemUI
 {
-    Button _b;
-    Button B
+    CustomButton _b;
+    CustomButton B
     {
         get
         {
             if (!_b)
-                _b = GetComponent<Button>();
+                _b = GetComponent<CustomButton>();
             return _b;
         }
     }
