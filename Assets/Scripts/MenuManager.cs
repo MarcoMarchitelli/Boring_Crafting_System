@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
@@ -7,6 +8,8 @@ public class MenuManager : MonoBehaviour
     public PlayerUI playerUI;
 
     [Header("UI")]
+    public Button craftButton;
+    public Button dismantleButton;
     public InventoryUI craftSelectionMenu;
     public ItemUI craftDecisionMenu;
     public ItemUI dismantleMenu;
@@ -24,6 +27,8 @@ public class MenuManager : MonoBehaviour
             Instance = this;
 
         playerUI.UpdateUI();
+
+        GoToMenu(MenuType.main);
     }
 
     private void Update()
@@ -40,25 +45,49 @@ public class MenuManager : MonoBehaviour
                     break;
                 case MenuType.craftDecision:
                     GoToMenu(MenuType.craftSelection);
-                    break;     
+                    break;
             }
         }
     }
 
     public void SelectItem(Item _item)
     {
-        selectedItem = _item;
+        foreach (ItemUI itemUI in playerInventoryUI.itemUIs)
+        {
+            //if this is the itemUI of the item we selected
+            if(itemUI.item == _item)
+            {
+                //if this item was already selected we deselect it
+                if(selectedItem == itemUI.item)
+                {
+                    itemUI.Select(false);
+                    selectedItem = null;
+                    dismantleButton.interactable = false;
+                }
+                //if not we select it
+                else
+                {
+                    itemUI.Select(true);
+                    selectedItem = itemUI.item;
+                    dismantleButton.interactable = true;
+                }
+            }
+            else
+            {
+                itemUI.Select(false);
+            }
+        }
     }
 
     public void OpenCraftSelectionMenu()
     {
-        craftSelectionMenu.gameObject.SetActive(true);
-        craftSelectionMenu.UpdateUI();
+        GoToMenu(MenuType.craftSelection);
+        craftSelectionMenu.Setup();
     }
 
     public void OpenCraftDecisionMenu(Item _item)
     {
-        craftDecisionMenu.gameObject.SetActive(true);
+        GoToMenu(MenuType.craftDecision);
         craftDecisionMenu.SetItem(_item);
     }
 
@@ -119,20 +148,30 @@ public class MenuManager : MonoBehaviour
 
     public void GoToMenu(MenuType _menuToGoTo)
     {
-        switch (_menuToGoTo)
+        currentMenu = _menuToGoTo;
+        switch (currentMenu)
         {
             case MenuType.main:
+                craftButton.interactable = true;
+                dismantleButton.interactable = false;
                 craftDecisionMenu.gameObject.SetActive(false);
                 craftSelectionMenu.gameObject.SetActive(false);
                 dismantleMenu.gameObject.SetActive(false);
                 break;
             case MenuType.craftSelection:
+                craftButton.interactable = false;
+                dismantleButton.interactable = false;
                 craftDecisionMenu.gameObject.SetActive(false);
                 craftSelectionMenu.gameObject.SetActive(true);
                 break;
             case MenuType.craftDecision:
+                craftButton.interactable = false;
+                dismantleButton.interactable = false;
+                craftDecisionMenu.gameObject.SetActive(true);
                 break;
             case MenuType.dismantle:
+                craftButton.interactable = false;
+                dismantleButton.interactable = false;
                 dismantleMenu.gameObject.SetActive(true);
                 dismantleMenu.SetItem(selectedItem);
                 break;

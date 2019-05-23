@@ -20,6 +20,7 @@ public class Inventory : MonoBehaviour
     }
 
     public System.Action OnDataChanged;
+    public System.Action OnSetup;
 
     private void Start()
     {
@@ -33,10 +34,15 @@ public class Inventory : MonoBehaviour
         for (int i = 0; i < Items.Length; i++)
         {
             if (i <= startingItems.Length - 1)
-                Items[i] = startingItems[i];
+            {
+                Item item = Instantiate(startingItems[i], transform);
+                Items[i] = item;
+            }
             else
                 Items[i] = null;
         }
+
+        OnSetup?.Invoke();
     }
 
     public void AddItem(Item _item)
@@ -45,7 +51,7 @@ public class Inventory : MonoBehaviour
         {
             if (Items[i] == null)
             {
-                Items[i] = _item;
+                Items[i] = Instantiate(_item, transform);
                 break;
             }
         }
@@ -57,6 +63,7 @@ public class Inventory : MonoBehaviour
         {
             if (Items[i] == _item)
             {
+                Destroy(Items[i].gameObject);
                 Items[i] = null;
                 break;
             }

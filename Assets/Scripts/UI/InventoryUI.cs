@@ -7,11 +7,21 @@ public class InventoryUI : MonoBehaviour
     [Header("UI")]
     public ItemUI itemUI;
 
+    [HideInInspector] public ItemUI[] itemUIs;
+
     private void Awake()
+    {
+        if (inventory)
+            inventory.OnSetup += Setup;
+    }
+
+    public void Setup()
     {
         if (inventory)
         {
             inventory.OnDataChanged += UpdateUI;
+            itemUIs = new ItemUI[inventory.Items.Length];
+            UpdateUI();
         }
     }
 
@@ -26,6 +36,7 @@ public class InventoryUI : MonoBehaviour
         {
             ItemUI iUI = Instantiate(itemUI, transform);
             iUI.SetItem(inventory.Items[i]);
+            itemUIs[i] = iUI;
         }
     }
 }

@@ -27,8 +27,11 @@ public class ItemUI : MonoBehaviour
 
     public virtual void UpdateUI()
     {
-        if(image)
+        if (image)
+        {
             image.sprite = item == null ? null : item.sprite;
+            image.color = item == null ? Color.clear : Color.white;
+        }
         if (nameText)
             nameText.text = item.displayName;
         if (costsTransform)
@@ -44,5 +47,10 @@ public class ItemUI : MonoBehaviour
                 itemCostUI.SetTarget(cost);
             }
         }
+    }
+
+    public virtual void Select(bool _value)
+    {
+
     }
 }

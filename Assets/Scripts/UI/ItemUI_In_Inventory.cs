@@ -19,13 +19,19 @@ public class ItemUI_In_Inventory : ItemUI
 
     private void Awake()
     {
+        highlightImage.color = Color.gray;
+
         Button.onClick.AddListener(() => {
             if (item)
             {
-                selected = !selected;
-                highlightImage.color = selected ? Color.cyan : Color.gray;
                 MenuManager.Instance.SelectItem(item);
             }
         });
+    }
+
+    public override void Select(bool _value)
+    {
+        selected = _value;
+        highlightImage.color = selected ? Color.cyan : Color.gray;
     }
 }
